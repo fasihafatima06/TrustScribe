@@ -3,6 +3,7 @@ import subprocess
 import datetime
 from sqlalchemy.orm import Session
 from .models import User, Project, Recording, TranscriptSegment, GlossaryItem, Insight
+from .security import get_password_hash
 from .services.transcription import get_realistic_interview_template
 from .services.comparison import compare_engine_segments
 from .services.insights import generate_interview_summary_and_insights
@@ -22,12 +23,30 @@ def generate_sample_wav_if_missing(file_path: str, spoken_text: str = "Hello, th
         print(f"[Seed Speech Warning] {e}")
 
 def seed_database_samples(db: Session):
-    # Ensure guest user exists
+    # Ensure demo user exists with valid hashed password
+    hashed_default = get_password_hash("password123")
+    demo_user = db.query(User).filter(User.email == "demo@trustscribe.com").first()
+    if not demo_user:
+        demo_user = User(
+            email="demo@trustscribe.com",
+            hashed_password=hashed_default,
+            full_name="Dr. Ananya Sharma",
+            company_name="TrustScribe Research Lab",
+            created_at=datetime.datetime.utcnow()
+        )
+        db.add(demo_user)
+        db.commit()
+        db.refresh(demo_user)
+    else:
+        demo_user.hashed_password = hashed_default
+        db.commit()
+
+    # Ensure guest user exists with valid hashed password
     guest = db.query(User).filter(User.email == "guest@trustscribe.local").first()
     if not guest:
         guest = User(
             email="guest@trustscribe.local",
-            hashed_password="guest_session_no_auth_needed",
+            hashed_password=hashed_default,
             full_name="Guest Researcher",
             company_name="TrustScribe Research Lab",
             created_at=datetime.datetime.utcnow()
@@ -35,6 +54,9 @@ def seed_database_samples(db: Session):
         db.add(guest)
         db.commit()
         db.refresh(guest)
+    else:
+        guest.hashed_password = hashed_default
+        db.commit()
 
     # Sample 1: Rural Payments Interview (Telugu + English)
     fn_te = "sample_rural_payments_telugu_en.wav"
