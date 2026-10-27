@@ -1,0 +1,26 @@
+# Python & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Application Data & Secrets
+backend/.env
+backend/uploads/.env
+backend/uploads/requirements.txt
+backend/trustscribe.db
+trustscribe.db
+*.db
+backend/uploads/*.wav
+backend/uploads/*.mp3
+backend/uploads/*.m4a
+backend/uploads/*.mp4
+backend/uploads/*.ogg
+!backend/uploads/.gitkeep
+
+# IDE & OS
+.DS_Store
+.idea/
+.vscode/

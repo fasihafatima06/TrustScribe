@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrustScribe — Multilingual AI Transcript Verification Platform</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo-group">
+        <div class="logo-icon">TS</div>
+        <span>TrustScribe</span>
+        <span class="logo-badge">22+ Indian Languages</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#how-it-works">working</a></li>
+        <li><a href="#why-us">why us</a></li>
+        <li><a href="#pricing">pricing</a></li>
+        <li><a href="#reviews">reviews</a></li>
+        <li><a href="#upload">try trustscribe</a></li>
+        <li><a href="#contact">contact us</a></li>
+        <li><a href="#upload" class="nav-cta-btn">Start Reviewing</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="container hero">
+    <div class="hero-left">
+      <span class="eyebrow">MADE FOR THE WAY INDIA SPEAKS</span>
+      <h1>Every language in the room.<br><span style="color:#60a5fa;">Don't just transcribe the interview. Check what the AI got wrong.</span></h1>
+      <p class="lead">
+        TrustScribe helps research teams review AI-generated transcripts of Hindi, Telugu, Tamil and other code-mixed Indian-language interviews. Find suspicious lines, check them against the original audio, and record what a human has verified.
+      </p>
+      <div class="hero-actions">
+        <a href="#upload" class="btn-primary">upload an interview →</a>
+        <a href="#how-it-works" class="btn-secondary">see how it works</a>
+      </div>
+      <p class="hero-note">✓ Quality-checking layer between AI and final research &bull; No login required</p>
+    </div>
+
+    <!-- Hero Card Mockup -->
+    <div class="hero-card" aria-label="Research evidence preview">
+      <div class="hero-card-header">
+        <span><b>Rural Payments Interview</b> &bull; Telugu + English</span>
+        <span class="badge badge-warning">2 Discrepancies Flagged</span>
+      </div>
+      <div class="hero-waveform">
+        <span style="height:35%"></span><span style="height:65%"></span><span style="height:90%"></span>
+        <span style="height:40%"></span><span style="height:75%"></span><span style="height:100%"></span>
+        <span style="height:55%"></span><span style="height:80%"></span><span style="height:45%"></span>
+        <span style="height:70%"></span><span style="height:95%"></span><span style="height:60%"></span>
+        <span style="height:30%"></span><span style="height:85%"></span><span style="height:50%"></span>
+      </div>
+      <div class="hero-row verified">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <b>00:00 - 00:04 &bull; Researcher</b>
+          <span class="badge badge-success">✓ Human-reviewed</span>
+        </div>
+        <p style="color:#cbd5e1;">నమస్కారం అండి, మీ గ్రామంలో digital payments ఎలా వాడుతున్నారు?</p>
+        <p style="color:#94a3b8; font-size:0.8rem; margin-top:2px;">“Hello, how are you using digital payments in your village?”</p>
+      </div>
+      <div class="hero-row flagged">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <b>00:04 - 00:10 &bull; Participant (Ramesh)</b>
+          <span class="badge badge-warning">⚠ Review suggested (72% Match)</span>
+        </div>
+        <p style="color:#fde047;">ఇక్కడ network weak undi, so payment process avvaledu.</p>
+        <p style="color:#94a3b8; font-size:0.8rem; margin-top:2px;">Engine 1: <i>avvaledu</i> &bull; Engine 2: <i>kaledu</i> &bull; Cross-engine disagreement</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: SEE HOW IT WORKS -->
+  <section class="how-it-works-section" id="how-it-works">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">SEE HOW IT WORKS</span>
+          <h2>From an interview to trusted insights.</h2>
+        </div>
+        <a href="#upload" class="btn-primary btn-pill">try it out here</a>
+      </div>
+
+      <div class="workflow-grid">
+        <!-- Steps Navigation List -->
+        <div class="steps-list">
+          <div class="step-card active">
+            <div class="step-num">01 / STEP</div>
+            <div class="step-title">Upload</div>
+            <p class="step-desc">Bring in audio or video containing Indian languages and natural code-switching. MP3, WAV, M4A, MP4.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">02 / STEP</div>
+            <div class="step-title">AI Transcribe</div>
+            <p class="step-desc">Two independent transcription engines (e.g. Sarvam & Gemini) produce transcripts with timestamps.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">03 / STEP</div>
+            <div class="step-title">Find what to review</div>
+            <p class="step-desc">RapidFuzz comparison aligns segments and automatically flags discrepancies, repetitions, or acoustic drops.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">04 / STEP</div>
+            <div class="step-title">Verify and export</div>
+            <p class="step-desc">Click timestamps to hear original audio, correct lines, and export certified research reports (DOCX, PDF, TXT).</p>
+          </div>
+        </div>
+
+        <!-- Embedded Interactive Workspace Preview -->
+        <div class="preview-workspace-card">
+          <div class="preview-bar">
+            <div class="preview-audio-ctrls">
+              <button class="play-btn-circle" id="previewPlayBtn" title="Play / Pause Audio">▶</button>
+              <div class="scrubber-wrap">
+                <span class="time-readout" id="previewTime">00:04 / 00:32</span>
+                <div class="scrubber-track" id="previewTrack">
+                  <div class="scrubber-fill" id="previewFill" style="width: 15%;"></div>
+                </div>
+              </div>
+              <a href="transcript.html?id=1" class="btn-secondary btn-pill" style="white-space:nowrap;">Open Full Workspace →</a>
+            </div>
+          </div>
+
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th style="width:80px;">Time</th>
+                <th style="width:130px;">Speaker</th>
+                <th>Original Script (Telugu / English)</th>
+                <th>English Translation</th>
+                <th style="width:160px;">Line Review</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="preview-tr" onclick="jumpPreviewAudio(0.0)">
+                <td><button class="seg-time-btn">▶ 00:00</button></td>
+                <td><b>Researcher</b><br><small style="color:#64748b;">Telugu + English</small></td>
+                <td>నమస్కారం అండి, మీ గ్రామంలో digital payments ఎలా వాడుతున్నారు?</td>
+                <td>“Hello, how are you using digital payments in your village?”</td>
+                <td><span class="badge badge-success">✓ Human-reviewed</span></td>
+              </tr>
+              <tr class="preview-tr active-row" onclick="jumpPreviewAudio(4.6)" style="background:rgba(245, 158, 11, 0.06);">
+                <td><button class="seg-time-btn" style="color:#fbbf24;">▶ 00:04</button></td>
+                <td><b>Participant (Ramesh)</b><br><small style="color:#64748b;">Code-mixed</small></td>
+                <td><b style="color:#fde047;">ఇక్కడ network weak undi, so payment process avvaledu.</b></td>
+                <td>“The network here is weak, so the payment didn't process.”</td>
+                <td><span class="badge badge-warning">⚠ Review suggested</span><br><small style="color:#f59e0b; font-size:0.72rem;">72% Engine Match</small></td>
+              </tr>
+              <tr class="preview-tr" onclick="jumpPreviewAudio(10.9)">
+                <td><button class="seg-time-btn">▶ 00:10</button></td>
+                <td><b>Participant (Ramesh)</b><br><small style="color:#64748b;">Code-mixed</small></td>
+                <td>ఖాతాలో డబ్బులు deduct అయ్యాయి కానీ shopkeeper కి confirm message రాలేదు.</td>
+                <td>“The money was deducted, but the shopkeeper received no confirmation.”</td>
+                <td><span class="badge badge-warning">⚠ Review suggested</span><br><small style="color:#f59e0b; font-size:0.72rem;">deduct vs debit</small></td>
+              </tr>
+              <tr class="preview-tr" onclick="jumpPreviewAudio(17.6)">
+                <td><button class="seg-time-btn">▶ 00:17</button></td>
+                <td><b>Researcher</b><br><small style="color:#64748b;">Telugu + English</small></td>
+                <td>అప్పుడు మీరు bank helpline కి call చేశారా లేక PhonePe app లో raise చేశారా?</td>
+                <td>“Did you then call the bank helpline or raise a ticket on PhonePe?”</td>
+                <td><span class="badge badge-neutral">Unverified</span></td>
+              </tr>
+              <tr class="preview-tr" onclick="jumpPreviewAudio(23.9)">
+                <td><button class="seg-time-btn">▶ 00:23</button></td>
+                <td><b>Participant (Ramesh)</b><br><small style="color:#64748b;">Code-mixed</small></td>
+                <td>Gram Panchayat లో Rythu Bharosa center కి వెళ్లి కనుక్కున్నాము, రెండు రోజుల్లో refund వచ్చింది.</td>
+                <td>“We checked at the Rythu Bharosa center at the Gram Panchayat, and the refund came within two days.”</td>
+                <td><span class="badge badge-neutral">Unverified</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: START WITH THE CONVERSATION (Upload & Sample Demos) -->
+  <section class="upload-section" id="upload">
+    <div class="container upload-grid">
+      <div>
+        <span class="eyebrow">START WITH THE CONVERSATION</span>
+        <h2>Drop a file. We’ll recognise every language in it.</h2>
+        <p class="lead" style="margin-bottom:20px;">
+          Do not tell us what the interview contains. TrustScribe detects the spoken language for each segment, including natural switching between Indian languages and English.
+        </p>
+        <div class="feature-checkmarks">
+          <span>Per-segment language detection</span>
+          <span>Code-mixed speech supported</span>
+          <span>English translation included</span>
+        </div>
+
+        <div style="margin-top:36px;">
+          <h4 style="font-size:0.85rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">
+            Or click a preloaded research fieldwork interview:
+          </h4>
+          <div class="sample-buttons-row">
+            <button class="sample-btn" onclick="runSampleInterview('rural_payments')">
+              <span>⚡ <b>Sample 1:</b> Telugu + English Rural Payments Interview</span>
+              <span class="badge badge-info">32s Audio &bull; 2 Discrepancies</span>
+            </button>
+            <button class="sample-btn" onclick="runSampleInterview('digital_banking')">
+              <span>⚡ <b>Sample 2:</b> Hindi + English Urban Digital Banking & UPI</span>
+              <span class="badge badge-info">31s Audio &bull; Server Drops</span>
+            </button>
+            <button class="sample-btn" onclick="runSampleInterview('healthcare')">
+              <span>⚡ <b>Sample 3:</b> Tamil + English Primary Healthcare Fieldwork</span>
+              <span class="badge badge-info">32s Audio &bull; Pharmacy Stockouts</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div>
+        <div class="dropzone-card" id="dropzoneEl">
+          <input type="file" id="audioFileInput" accept=".mp3,.wav,.m4a,.mp4,.ogg" hidden>
+          <div class="drop-icon">↑</div>
+          <h3 style="margin-bottom:6px;">Drop your recording here</h3>
+          <p style="color:#94a3b8; font-size:0.88rem; margin-bottom:18px;">
+            or choose a file &bull; MP3, WAV, M4A, MP4, OGG
+          </p>
+          <button class="btn-primary" onclick="document.getElementById('audioFileInput').click()">Browse Files</button>
+        </div>
+
+        <div class="auto-detect-pill-bar">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="color:#06b6d4;">✦</span>
+            <div>
+              <b>Detect languages automatically</b>
+              <div style="font-size:0.75rem; color:#64748b;">Hindi &bull; English &bull; Tamil &bull; Telugu &bull; Bengali &bull; Marathi + more</div>
+            </div>
+          </div>
+          <span class="badge badge-info">→ English Translation</span>
+        </div>
+        <p id="uploadStatusMsg" style="margin-top:12px; font-size:0.85rem; color:#94a3b8; text-align:center;"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: WHY TRUSTSCRIBE (4 Features) -->
+  <section class="why-section" id="why-us">
+    <div class="container">
+      <div style="text-align:center; max-width:700px; margin:0 auto 20px;">
+        <span class="eyebrow">WHY TRUSTSCRIBE</span>
+        <h2>for interview transcription?</h2>
+        <p class="lead" style="margin:0 auto;">Smarter transcription. Deeper insights. Built for real research.</p>
+      </div>
+
+      <div class="four-cards-grid">
+        <div class="feature-box">
+          <div class="card-num">01</div>
+          <h3>Multilingual and code-mixed speech</h3>
+          <p style="color:#94a3b8; font-size:0.9rem; line-height:1.6;">
+            Handle interview transcripts containing supported Indian languages mixed with English, with an English translation alongside the original transcript.
+          </p>
+        </div>
+        <div class="feature-box">
+          <div class="card-num">02</div>
+          <h3>Review audio at the exact timestamp</h3>
+          <p style="color:#94a3b8; font-size:0.9rem; line-height:1.6;">
+            Jump to a potentially incorrect or unclear line and check it against the original recording before editing it.
+          </p>
+        </div>
+        <div class="feature-box">
+          <div class="card-num">03</div>
+          <h3>Compare AI-generated transcripts</h3>
+          <p style="color:#94a3b8; font-size:0.9rem; line-height:1.6;">
+            Highlight differences between transcription outputs using RapidFuzz alignment to help researchers prioritize lines for human review.
+          </p>
+        </div>
+        <div class="feature-box">
+          <div class="card-num">04</div>
+          <h3>Export research-ready records</h3>
+          <p style="color:#94a3b8; font-size:0.9rem; line-height:1.6;">
+            Produce reports that distinguish AI-generated text from lines marked as human-reviewed, with timestamps, corrections, and audit trails.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: CUSTOMER REVIEWS -->
+  <section class="reviews-section" id="reviews">
+    <div class="container">
+      <div style="text-align:center; max-width:700px; margin:0 auto 20px;">
+        <span class="eyebrow">CUSTOMER REVIEWS</span>
+        <h2>What researchers need</h2>
+        <p class="lead" style="margin:0 auto;">Designed around the realities of multilingual fieldwork.</p>
+      </div>
+
+      <div class="reviews-grid">
+        <div class="review-card">
+          <p class="review-quote">“Finding the lines that need another listen could make transcript review much less tedious.”</p>
+          <div class="reviewer-meta">
+            <div class="avatar-circle">PS</div>
+            <div>
+              <b>Priya Sharma</b>
+              <div style="font-size:0.75rem; color:#64748b;">Research Analyst</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <p class="review-quote">“Keeping the original-language transcript beside its English translation would help us review context without switching between files.”</p>
+          <div class="reviewer-meta">
+            <div class="avatar-circle" style="background:linear-gradient(135deg, #06b6d4, #2563eb);">AM</div>
+            <div>
+              <b>Arjun Mehta</b>
+              <div style="font-size:0.75rem; color:#64748b;">Field Researcher</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <p class="review-quote">“The multilingual support and translation features save me hours and help me focus on what really matters — the insights.”</p>
+          <div class="reviewer-meta">
+            <div class="avatar-circle" style="background:linear-gradient(135deg, #10b981, #06b6d4);">NK</div>
+            <div>
+              <b>Neha Kapoor</b>
+              <div style="font-size:0.75rem; color:#64748b;">Language Specialist</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: PRICING PLANS -->
+  <section class="pricing-section" id="pricing">
+    <div class="container" style="text-align:center;">
+      <span class="eyebrow">PRICING PLANS</span>
+      <h2>Choose the plan that fits your needs</h2>
+      <div class="pricing-toggle">
+        <button id="priceMonthlyBtn" class="active" onclick="setBillingCycle('monthly')">Monthly</button>
+        <button id="priceAnnualBtn" onclick="setBillingCycle('annual')">Annual <span style="color:#34d399; font-size:0.75rem;">Save 20%</span></button>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Free -->
+        <div class="pricing-card">
+          <div>
+            <h3>Free</h3>
+            <p style="font-size:0.8rem; color:#64748b;">Try TrustScribe on a small interview</p>
+            <div class="pricing-price" id="priceFree">₹0<span style="font-size:0.9rem; color:#64748b;"> / month</span></div>
+            <ul class="pricing-features">
+              <li>30 audio minutes/month</li>
+              <li>1 project &bull; 1 user</li>
+              <li>Original language transcript</li>
+              <li>English translation</li>
+              <li>Basic flagged line review</li>
+              <li>Timestamp-linked playback</li>
+              <li>TXT export</li>
+            </ul>
+          </div>
+          <a href="#upload" class="btn-secondary" style="width:100%;">Get started free</a>
+        </div>
+
+        <!-- Researcher (Popular) -->
+        <div class="pricing-card popular">
+          <div class="popular-badge">Most Popular</div>
+          <div>
+            <h3>Researcher</h3>
+            <p style="font-size:0.8rem; color:#64748b;">For students and individual researchers</p>
+            <div class="pricing-price" id="priceResearcher" style="color:#60a5fa;">₹499<span style="font-size:0.9rem; color:#64748b;"> / month</span></div>
+            <ul class="pricing-features">
+              <li>300 audio minutes/month</li>
+              <li>10 projects &bull; 1 user</li>
+              <li>Everything in Free</li>
+              <li>Compare two transcription outputs</li>
+              <li>Flag disagreements for review</li>
+              <li>Edit and mark human-reviewed</li>
+              <li>DOCX and PDF reports</li>
+              <li>Reusable names and terminology</li>
+            </ul>
+          </div>
+          <a href="#upload" class="btn-primary" style="width:100%;">Choose Researcher</a>
+        </div>
+
+        <!-- Pro -->
+        <div class="pricing-card">
+          <div>
+            <h3>Pro</h3>
+            <p style="font-size:0.8rem; color:#64748b;">For researchers handling interviews regularly</p>
+            <div class="pricing-price" id="pricePro">₹1,499<span style="font-size:0.9rem; color:#64748b;"> / month</span></div>
+            <ul class="pricing-features">
+              <li>1,200 audio minutes/month</li>
+              <li>50 projects &bull; 3 users</li>
+              <li>Everything in Researcher</li>
+              <li>Shared project glossary</li>
+              <li>Review history with reviewer & timestamp</li>
+              <li>Search transcripts across projects</li>
+              <li>Priority processing AI support</li>
+            </ul>
+          </div>
+          <a href="#upload" class="btn-secondary" style="width:100%;">Choose Pro</a>
+        </div>
+
+        <!-- Agency -->
+        <div class="pricing-card">
+          <div>
+            <h3>Agency</h3>
+            <p style="font-size:0.8rem; color:#64748b;">For fieldwork and market research teams</p>
+            <div class="pricing-price" style="font-size:1.6rem; margin:22px 0;">Custom pricing</div>
+            <ul class="pricing-features">
+              <li>Custom audio minutes</li>
+              <li>Custom projects &bull; 10 users</li>
+              <li>Everything in Pro</li>
+              <li>Centralized team management</li>
+              <li>Team-level verification reports</li>
+              <li>Configurable review permissions</li>
+              <li>Custom onboarding and support</li>
+            </ul>
+          </div>
+          <a href="#contact" class="btn-secondary" style="width:100%;">Contact sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: CONTACT US -->
+  <section class="contact-section" id="contact">
+    <div class="container contact-grid">
+      <div>
+        <span class="eyebrow">LET'S START A CONVERSATION</span>
+        <h2>CONTACT US</h2>
+        <p class="lead" style="margin-bottom:24px;">Share your details and tell us how we can help.</p>
+        <p style="color:#94a3b8; font-size:0.9rem; line-height:1.7;">
+          Whether you are conducting qualitative fieldwork in rural India, linguistic research across code-mixed communities, or scaling an enterprise research team, our verification engine ensures your data is rock-solid.
+        </p>
+      </div>
+
+      <form class="contact-form" id="contactForm">
+        <div class="input-group">
+          <label>Email *</label>
+          <input type="email" class="form-input" id="contactEmail" required placeholder="you@university.edu or you@organization.com">
+        </div>
+        <div class="form-row">
+          <div class="input-group">
+            <label>First Name *</label>
+            <input type="text" class="form-input" id="contactFirst" required placeholder="First name">
+          </div>
+          <div class="input-group">
+            <label>Last Name</label>
+            <input type="text" class="form-input" id="contactLast" placeholder="Last name">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Company / University Name</label>
+          <input type="text" class="form-input" id="contactCompany" placeholder="Organization name">
+        </div>
+        <div class="form-row">
+          <div class="input-group">
+            <label>Job Title</label>
+            <input type="text" class="form-input" id="contactTitle" placeholder="e.g. Lead Researcher, PhD Scholar">
+          </div>
+          <div class="input-group">
+            <label>Company Size</label>
+            <select class="form-input" id="contactSize">
+              <option value="1-10">1 - 10 people</option>
+              <option value="11-50">11 - 50 people</option>
+              <option value="51-200">51 - 200 people</option>
+              <option value="200+">200+ people</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Anything you would like to share with us?</label>
+          <textarea class="form-input" id="contactMessage" rows="3" placeholder="Tell us about your languages, project scope, or transcription challenges..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top:6px;">Submit Inquiry</button>
+        <p id="contactStatusMsg" style="font-size:0.85rem; color:#34d399; margin-top:8px; display:none;"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="logo-icon" style="width:22px; height:22px; font-size:11px;">TS</div>
+        <span style="font-weight:700;">TrustScribe</span>
+        <span style="color:#64748b;">— Multilingual AI Transcript Verification Platform</span>
+      </div>
+      <div>&copy; 2026 TrustScribe. Built for Indian research interviews.</div>
+    </div>
+  </footer>
+
+  <!-- Real-Time Processing Stepper Modal -->
+  <div class="processing-modal" id="processingModal" style="display:none;">
+    <div class="processing-card">
+      <div class="spinner"></div>
+      <h3 id="procTitle" style="text-align:center; margin-bottom:8px;">Processing Interview Recording</h3>
+      <p id="procSub" style="text-align:center; color:#94a3b8; font-size:0.85rem;">Running TrustScribe acoustic verification pipeline...</p>
+      
+      <div class="stepper-list">
+        <div class="stepper-item active" id="step1">
+          <span>●</span>
+          <span>1. Uploading & validating recording format</span>
+        </div>
+        <div class="stepper-item" id="step2">
+          <span>○</span>
+          <span>2. Dual-Engine ASR (Engine 1: Sarvam + Engine 2: Gemini)</span>
+        </div>
+        <div class="stepper-item" id="step3">
+          <span>○</span>
+          <span>3. RapidFuzz segment alignment & discrepancy detection</span>
+        </div>
+        <div class="stepper-item" id="step4">
+          <span>○</span>
+          <span>4. Segment-level language identification & English translation</span>
+        </div>
+        <div class="stepper-item" id="step5">
+          <span>○</span>
+          <span>5. Synthesizing evidence insights & launching workspace</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="demoAudioPlayer" preload="auto" src="http://127.0.0.1:8000/stream-audio/sample_rural_payments_telugu_en.wav"></audio>
+
+  <script src="js/api.js"></script>
+  <script src="js/landing.js"></script>
+</body>
+</html>

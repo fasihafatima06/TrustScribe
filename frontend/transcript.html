@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrustScribe — Multilingual Verification Workspace</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="workspace-page">
+
+  <!-- Top Navigation & Project Info -->
+  <header class="ws-top-bar">
+    <div class="ws-title-group">
+      <a href="index.html" class="logo-group">
+        <div class="logo-icon">TS</div>
+        <span style="font-size:1.1rem;">TrustScribe</span>
+      </a>
+      <span style="color:var(--border-color);">|</span>
+      <div>
+        <h2 id="projectTitle" style="font-size:1.05rem; font-weight:700; margin:0;">Loading Interview Workspace...</h2>
+        <span id="recordingMeta" style="font-size:0.75rem; color:var(--text-muted);">Acoustic Verification Session</span>
+      </div>
+    </div>
+
+    <div class="ws-actions-group">
+      <button class="btn-secondary btn-pill" id="openGlossaryBtn">📚 Research Glossary</button>
+      <button class="btn-secondary btn-pill" id="openInsightsBtn">💡 AI Insights & Summary</button>
+      <button class="btn-primary btn-pill" id="openExportBtn">📥 Export Report</button>
+      <a href="index.html" class="btn-secondary btn-pill" style="padding:6px 12px;">← Home</a>
+    </div>
+  </header>
+
+  <!-- Sticky Audio Playback Bar -->
+  <section class="ws-audio-bar">
+    <button class="play-btn-circle" id="wsPlayBtn" title="Play / Pause Audio (Spacebar)">▶</button>
+    <button class="btn-secondary btn-pill" id="btnSkipBack" title="Skip back 5s" style="padding:6px 10px;">-5s</button>
+    <button class="btn-secondary btn-pill" id="btnSkipFwd" title="Skip forward 5s" style="padding:6px 10px;">+5s</button>
+    
+    <div class="scrubber-wrap">
+      <span class="time-readout" id="wsTime">00:00 / 00:00</span>
+      <div class="scrubber-track" id="wsTrack">
+        <div class="scrubber-fill" id="wsFill" style="width:0%;"></div>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase;">Speed:</span>
+      <select id="playbackSpeedSelect" class="form-input" style="padding:4px 8px; font-size:0.8rem; width:80px; background:#0d131f;">
+        <option value="0.75">0.75x</option>
+        <option value="1.0" selected>1.0x</option>
+        <option value="1.25">1.25x</option>
+        <option value="1.5">1.5x</option>
+        <option value="2.0">2.0x</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- Verification Stats Banner -->
+  <div class="ws-stats-banner">
+    <div style="display:flex; align-items:center; gap:20px;">
+      <div id="statReviewed">
+        <b style="color:#34d399;">Human-Reviewed:</b> <span id="countReviewed">0 / 0 (0%)</span>
+      </div>
+      <div id="statFlagged">
+        <b style="color:#fbbf24;">Review Suggested:</b> <span id="countFlagged">0 lines</span>
+      </div>
+      <div id="statUnverified" style="color:var(--text-dim);">
+        <b>Unverified:</b> <span id="countUnverified">0 lines</span>
+      </div>
+    </div>
+
+    <button class="btn-secondary btn-pill" id="btnNextFlagged" style="border-color:#f59e0b; color:#fbbf24;">
+      ⚡ Jump to Next Flagged Line
+    </button>
+  </div>
+
+  <!-- Filter & Search Toolbar -->
+  <div class="ws-toolbar">
+    <div class="filter-pills" id="filterPills">
+      <button class="filter-pill active" data-filter="all">All (<span id="pillAll">0</span>)</button>
+      <button class="filter-pill" data-filter="review_suggested">Review Suggested (<span id="pillFlagged">0</span>)</button>
+      <button class="filter-pill" data-filter="human_reviewed">Human-Reviewed (<span id="pillReviewed">0</span>)</button>
+      <button class="filter-pill" data-filter="unverified">Unverified (<span id="pillUnverified">0</span>)</button>
+      <button class="filter-pill" data-filter="unclear">Unclear (<span id="pillUnclear">0</span>)</button>
+    </div>
+
+    <div style="width:280px;">
+      <input type="text" id="transcriptSearch" class="form-input" placeholder="🔍 Search transcript lines..." style="padding:6px 12px; font-size:0.85rem;">
+    </div>
+  </div>
+
+  <!-- Main Transcript Verification Stream -->
+  <main class="ws-segments-container" id="segmentsContainer">
+    <p style="color:var(--text-muted); text-align:center; padding:40px;">Loading interview verification data...</p>
+  </main>
+
+  <!-- Research Glossary Modal Dialog -->
+  <dialog class="app-dialog" id="glossaryDialog">
+    <div class="dialog-box">
+      <div class="dialog-header">
+        <div>
+          <span class="eyebrow" style="margin-bottom:4px;">REUSABLE FIELDWORK GLOSSARY</span>
+          <h3 style="margin:0;">Approved Terminology & Spellings</h3>
+        </div>
+        <button class="dialog-close" onclick="document.getElementById('glossaryDialog').close()">×</button>
+      </div>
+
+      <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:18px;">
+        Standardize spelling for names, places, government schemes, and technical jargon across your research interviews.
+      </p>
+
+      <div style="margin-bottom:20px; max-height:220px; overflow-y:auto; border:1px solid var(--border-color); border-radius:var(--radius-md);">
+        <table style="width:100%; border-collapse:collapse; font-size:0.85rem;" id="glossaryTable">
+          <thead>
+            <tr style="background:#0d131f; border-bottom:1px solid var(--border-color); text-align:left; color:var(--text-dim);">
+              <th style="padding:8px 12px;">Approved Term</th>
+              <th style="padding:8px 12px;">Category</th>
+              <th style="padding:8px 12px;">Notes</th>
+              <th style="padding:8px 12px; width:40px;"></th>
+            </tr>
+          </thead>
+          <tbody id="glossaryTbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Add New Glossary Term -->
+      <form id="newGlossaryForm" style="display:grid; grid-template-columns:1fr 120px 1.2fr auto; gap:8px; margin-bottom:16px;">
+        <input type="text" class="form-input" id="newGlossaryTerm" placeholder="Approved term" required style="padding:6px 10px; font-size:0.82rem;">
+        <select class="form-input" id="newGlossaryCat" style="padding:6px 8px; font-size:0.82rem; background:#0d131f;">
+          <option value="Terminology">Terminology</option>
+          <option value="Organization">Organization</option>
+          <option value="Name">Person Name</option>
+          <option value="Place">Place Name</option>
+        </select>
+        <input type="text" class="form-input" id="newGlossaryDesc" placeholder="Context notes" style="padding:6px 10px; font-size:0.82rem;">
+        <button type="submit" class="btn-primary btn-pill" style="padding:6px 14px;">+ Add</button>
+      </form>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-color); padding-top:14px;">
+        <span style="font-size:0.8rem; color:var(--text-dim);" id="glossaryFeedback"></span>
+        <button class="btn-secondary btn-pill" id="applyGlossaryBtn" style="border-color:#3b82f6; color:#60a5fa;">
+          ✦ Standardize Transcript Spellings
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- AI Insights & Summary Modal Dialog -->
+  <dialog class="app-dialog" id="insightsDialog">
+    <div class="dialog-box" style="max-width:750px;">
+      <div class="dialog-header">
+        <div>
+          <span class="eyebrow" style="margin-bottom:4px;">FIELDWORK SYNTHESIS</span>
+          <h3 style="margin:0;">Executive Summary & Evidence Insights</h3>
+        </div>
+        <button class="dialog-close" onclick="document.getElementById('insightsDialog').close()">×</button>
+      </div>
+
+      <div style="background:#0d131f; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:16px; margin-bottom:20px;">
+        <h4 style="font-size:0.75rem; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; letter-spacing:0.5px;">Executive Research Summary</h4>
+        <p id="dialogSummaryText" style="color:var(--text-main); font-size:0.9rem; line-height:1.6;"></p>
+      </div>
+
+      <h4 style="font-size:0.75rem; text-transform:uppercase; color:var(--text-dim); margin-bottom:10px; letter-spacing:0.5px;">Evidence-Linked Thematic Insights</h4>
+      <div id="dialogInsightsList" style="display:flex; flex-direction:column; gap:12px; max-height:280px; overflow-y:auto; padding-right:6px;"></div>
+    </div>
+  </dialog>
+
+  <!-- Export Report Modal Dialog -->
+  <dialog class="app-dialog" id="exportDialog">
+    <div class="dialog-box">
+      <div class="dialog-header">
+        <div>
+          <span class="eyebrow" style="margin-bottom:4px;">RESEARCH-READY RECORDS</span>
+          <h3 style="margin:0;">Download Verification Report</h3>
+        </div>
+        <button class="dialog-close" onclick="document.getElementById('exportDialog').close()">×</button>
+      </div>
+
+      <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:20px;">
+        Choose your export format. Reports include timestamps, speaker labels, original text, English translations, dual-engine discrepancies, and human review audit statuses.
+      </p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;">
+        <button class="feature-box" onclick="downloadExport('docx')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color);">
+          <div style="font-size:1.4rem; margin-bottom:6px;">📄</div>
+          <b>Word Document (.docx)</b>
+          <p style="font-size:0.78rem; color:var(--text-dim); margin-top:4px;">
+            Full report formatted for papers & fieldwork reports with verification table.
+          </p>
+        </button>
+
+        <button class="feature-box" onclick="downloadExport('pdf')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color);">
+          <div style="font-size:1.4rem; margin-bottom:6px;">📑</div>
+          <b>PDF Document (.pdf)</b>
+          <p style="font-size:0.78rem; color:var(--text-dim); margin-top:4px;">
+            Styled verification record with audit summary and status badges.
+          </p>
+        </button>
+
+        <button class="feature-box" onclick="downloadExport('txt')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color);">
+          <div style="font-size:1.4rem; margin-bottom:6px;">📝</div>
+          <b>Standard Text (.txt)</b>
+          <p style="font-size:0.78rem; color:var(--text-dim); margin-top:4px;">
+            Lightweight plain-text transcript with timestamp markers.
+          </p>
+        </button>
+
+        <button class="feature-box" onclick="downloadExport('json')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color);">
+          <div style="font-size:1.4rem; margin-bottom:6px;">📊</div>
+          <b>Structured JSON (.json)</b>
+          <p style="font-size:0.78rem; color:var(--text-dim); margin-top:4px;">
+            Raw machine-readable transcript with RapidFuzz scores and engine comparisons.
+          </p>
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <audio id="wsAudioMedia" preload="metadata"></audio>
+
+  <script src="js/api.js"></script>
+  <script src="js/transcript.js"></script>
+</body>
+</html>

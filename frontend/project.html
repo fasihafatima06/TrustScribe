@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Workspace - TrustScribe</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <a href="dashboard.html" class="logo-group">
+      <span>TrustScribe</span>
+      <span class="logo-badge" id="projectNavBadge">Project</span>
+    </a>
+    <a href="dashboard.html" class="btn-outline" style="font-size:0.85rem;">← All Projects</a>
+  </nav>
+
+  <div class="container">
+    <div style="margin-bottom: 30px;">
+      <h2 id="projHeaderTitle" style="font-weight: 700;">Loading...</h2>
+      <p id="projHeaderDesc" style="color: #94A3B8; font-size: 0.9rem;"></p>
+    </div>
+
+    <!-- Upload Box (Sketch 1 & 5) -->
+    <div class="card" style="margin-bottom: 40px;">
+      <h3 style="margin-bottom: 12px;">Upload Interview Audio/Video</h3>
+      
+      <div style="display:none;">
+        <div>
+          <label style="font-size: 0.8rem; color: #94A3B8;">Interview Source Language</label>
+          <select id="sourceLangSelect" class="input-field" style="margin-top: 4px;">
+            <option value="Hindi">Hindi (हिंदी)</option>
+            <option value="Tamil">Tamil (தமிழ்)</option>
+            <option value="Telugu">Telugu (తెలుగు)</option>
+            <option value="Bengali">Bengali (বাংলা)</option>
+            <option value="Marathi">Marathi (मराठी)</option>
+            <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
+            <option value="English">Indian English</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 0.8rem; color: #94A3B8;">Target Translation</label>
+          <select id="targetLangSelect" class="input-field" style="margin-top: 4px;">
+            <option value="English">English</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="auto-detect-panel" style="margin-bottom:18px;"><div class="detect-icon">✦</div><div><strong>Automatic mixed-language detection</strong><span>We identify the language of every spoken segment, then translate it to English.</span></div><div class="translation-pill">→ English</div></div>
+
+      <div class="dropzone" id="fileDropzone">
+        <div style="font-size: 2.2rem; color: #818CF8; margin-bottom: 8px;">⇪</div>
+        <p style="font-weight: 600; margin-bottom: 4px;">Drag and drop audio file here, or click to browse</p>
+        <p style="font-size: 0.8rem; color: #64748B;">Supports MP3, WAV, M4A, MP4 (Max 100MB)</p>
+        <input type="file" id="fileInput" accept=".mp3,.wav,.m4a,.mp4,.ogg" style="display:none;" />
+      </div>
+      <div id="uploadStatusText" style="margin-top: 10px; font-size: 0.85rem; color: #818CF8; display: none;"></div>
+    </div>
+
+    <!-- Recordings List -->
+    <h3 style="margin-bottom: 16px;">Processed Recordings</h3>
+    <div id="recordingsList">
+      <p style="color: #94A3B8;">Loading recordings...</p>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="project.js"></script>
+</body>
+</html>

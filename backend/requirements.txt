@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic[email]
+python-multipart
+passlib[bcrypt]
+bcrypt==4.0.1
+python-jose[cryptography]
+requests
+google-genai
+datasets
+rapidfuzz
+python-docx
+reportlab
+python-dotenv

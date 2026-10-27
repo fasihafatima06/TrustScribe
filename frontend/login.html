@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - TrustScribe</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body style="display:flex; align-items:center; justify-content:center; min-height:100vh;">
+  <div class="card" style="width: 100%; max-width: 420px;">
+    <div style="text-align:center; margin-bottom: 24px;">
+      <h2 style="font-weight:700;">Welcome back</h2>
+      <p style="color:#94A3B8; font-size:0.85rem;">Access your research projects</p>
+    </div>
+
+    <div id="errorAlert" style="display:none; background:#FEE2E2; color:#EF4444; padding:10px; border-radius:6px; font-size:0.85rem; margin-bottom:16px;"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Work Email</label>
+        <input type="email" id="email" class="input-field" required placeholder="researcher@university.edu" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="input-field" required placeholder="••••••••" />
+      </div>
+      <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">Sign In</button>
+    </form>
+
+    <p style="font-size:0.85rem; color:#94A3B8; text-align:center; margin-top: 20px;">
+      Don't have an account? <a href="register.html" style="color:var(--primary); text-decoration:none;">Sign up</a>
+    </p>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const errBox = document.getElementById("errorAlert");
+      errBox.style.display = "none";
+      try {
+        const res = await api.request("/auth/login", {
+          method: "POST",
+          body: JSON.stringify({
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
+          })
+        });
+        api.setAuth(res.access_token, res.user);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        errBox.textContent = err.message;
+        errBox.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
