@@ -2,5 +2,9 @@
   "version": 2,
   "outputDirectory": "frontend",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://trustscribe.onrender.com/api/$1" },
+    { "source": "/stream-audio/(.*)", "destination": "https://trustscribe.onrender.com/stream-audio/$1" }
+  ]
 }

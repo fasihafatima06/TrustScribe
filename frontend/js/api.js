@@ -12,7 +12,7 @@ function getBackendOrigin() {
     return "http://127.0.0.1:8000";
   }
   // Default Render production endpoint:
-  return "https://trustscribe-backend.onrender.com";
+  return "https://trustscribe.onrender.com";
 }
 
 const api = {
