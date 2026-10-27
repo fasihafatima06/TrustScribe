@@ -11,16 +11,34 @@ from .services.insights import generate_interview_summary_and_insights
 UPLOAD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "uploads"))
 
 def generate_sample_wav_if_missing(file_path: str, spoken_text: str = "Hello, this is a spoken audio recording for TrustScribe."):
-    if os.path.exists(file_path) and os.path.getsize(file_path) > 10000:
+    if os.path.exists(file_path) and os.path.getsize(file_path) > 1000:
         return
     
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    if os.name == 'nt':
+        try:
+            clean_text = spoken_text.replace("'", "").replace('"', '')
+            ps_cmd = f"Add-Type -AssemblyName System.Speech; $s = New-Object System.Speech.Synthesis.SpeechSynthesizer; $s.SetOutputToWaveFile('{file_path}'); $s.Speak('{clean_text}'); $s.Dispose()"
+            subprocess.run(["powershell", "-Command", ps_cmd], check=True, timeout=15)
+            if os.path.exists(file_path) and os.path.getsize(file_path) > 1000:
+                return
+        except Exception as e:
+            print(f"[Seed Speech Warning] {e}")
+
+    # Fallback to minimal valid silent/tone WAV if on Linux/Render
     try:
-        clean_text = spoken_text.replace("'", "").replace('"', '')
-        ps_cmd = f"Add-Type -AssemblyName System.Speech; $s = New-Object System.Speech.Synthesis.SpeechSynthesizer; $s.SetOutputToWaveFile('{file_path}'); $s.Speak('{clean_text}'); $s.Dispose()"
-        subprocess.run(["powershell", "-Command", ps_cmd], check=True, timeout=15)
+        import wave, math, struct
+        sample_rate = 24000
+        duration_s = 5
+        with wave.open(file_path, "wb") as wav_file:
+            wav_file.setnchannels(1)
+            wav_file.setsampwidth(2)
+            wav_file.setframerate(sample_rate)
+            for i in range(sample_rate * duration_s):
+                val = int(32767.0 * 0.05 * math.sin(2.0 * math.pi * 440.0 * (i / sample_rate)))
+                wav_file.writeframesraw(struct.pack('<h', val))
     except Exception as e:
-        print(f"[Seed Speech Warning] {e}")
+        print(f"[WAV Fallback Warning] {e}")
 
 def seed_database_samples(db: Session):
     # Ensure demo user exists with valid hashed password

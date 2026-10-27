@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (sideAudioLang) sideAudioLang.textContent = data.source_language;
 
       // Media setup
-      const mediaUrl = `http://127.0.0.1:8000/stream-audio/${data.storage_filename}`;
+      const mediaUrl = `${api.getStreamBase()}/${data.storage_filename}`;
       const ext = data.storage_filename.split(".").pop().toLowerCase();
       isVideo = ["mp4", "mov", "webm"].includes(ext);
 
@@ -631,7 +631,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   window.downloadExport = function(format) {
-    const url = `http://127.0.0.1:8000/api/recordings/${recordingId}/export/${format}`;
+    const url = `${api.getBaseUrl()}/recordings/${recordingId}/export/${format}`;
     window.open(url, "_blank");
     showToast(`Downloading .${format} report...`);
     exportDialog.close();

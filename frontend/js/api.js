@@ -1,7 +1,42 @@
-const API_BASE = "http://127.0.0.1:8000/api";
-const STREAM_BASE = "http://127.0.0.1:8000/stream-audio";
+// TrustScribe API Client & Deployment Configuration
+function getBackendOrigin() {
+  if (window.TRUSTSCRIBE_BACKEND_URL && window.TRUSTSCRIBE_BACKEND_URL.trim()) {
+    return window.TRUSTSCRIBE_BACKEND_URL.trim().replace(/\/+$/, "");
+  }
+  const stored = localStorage.getItem("ts_backend_url");
+  if (stored && stored.trim()) {
+    return stored.trim().replace(/\/+$/, "");
+  }
+  const host = window.location.hostname;
+  if (host === "localhost" || host === "127.0.0.1" || host === "") {
+    return "http://127.0.0.1:8000";
+  }
+  // Default Render production endpoint:
+  return "https://trustscribe-backend.onrender.com";
+}
 
 const api = {
+  getBackendOrigin() {
+    return getBackendOrigin();
+  },
+
+  getBaseUrl() {
+    return `${getBackendOrigin()}/api`;
+  },
+
+  getStreamBase() {
+    return `${getBackendOrigin()}/stream-audio`;
+  },
+
+  setBackendUrl(url) {
+    if (!url) {
+      localStorage.removeItem("ts_backend_url");
+    } else {
+      localStorage.setItem("ts_backend_url", url.trim().replace(/\/+$/, ""));
+    }
+    window.location.reload();
+  },
+
   getToken() {
     return localStorage.getItem("trustscribe_token") || "";
   },
@@ -14,9 +49,9 @@ const api = {
   getUser() {
     const raw = localStorage.getItem("trustscribe_user");
     try {
-      return raw ? JSON.parse(raw) : { full_name: "Researcher", email: "researcher@fieldwork.org" };
+      return raw ? JSON.parse(raw) : { full_name: "Researcher", email: "researcher@trustscribe.local" };
     } catch {
-      return { full_name: "Researcher", email: "researcher@fieldwork.org" };
+      return { full_name: "Researcher", email: "researcher@trustscribe.local" };
     }
   },
 
@@ -26,7 +61,8 @@ const api = {
   },
 
   async request(endpoint, options = {}) {
-    const url = endpoint.startsWith("http") ? endpoint : `${API_BASE}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
+    const base = this.getBaseUrl();
+    const url = endpoint.startsWith("http") ? endpoint : `${base}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
     const headers = options.headers ? { ...options.headers } : {};
 
     const token = this.getToken();

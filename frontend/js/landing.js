@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Demo Audio Player Elements
   const demoAudio = document.getElementById("demoAudioPlayer");
+  if (demoAudio && typeof api !== "undefined") {
+    demoAudio.src = `${api.getStreamBase()}/sample_rural_payments_telugu_en.wav`;
+  }
   const previewPlayBtn = document.getElementById("previewPlayBtn");
   const previewTime = document.getElementById("previewTime");
   const previewFill = document.getElementById("previewFill");
