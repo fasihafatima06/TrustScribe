@@ -476,8 +476,15 @@
           <textarea class="form-input" id="contactMessage" rows="3" placeholder="Tell us about your languages, project scope, or transcription challenges..."></textarea>
         </div>
         <button type="submit" class="btn-primary" style="margin-top:6px;">Submit Inquiry</button>
-        <p id="contactStatusMsg" style="font-size:0.85rem; color:#34d399; margin-top:8px; display:none;"></p>
       </form>
+
+      <!-- Prominent Success Banner -->
+      <div id="contactSuccessCard" class="contact-success-card" style="display:none;">
+        <div class="success-icon-badge">✓</div>
+        <h3>Thank you for contacting TrustScribe!</h3>
+        <p>Your message has been submitted successfully. Our team will get back to you soon.</p>
+        <button type="button" class="btn-secondary btn-pill" id="btnResetContact">Send another message</button>
+      </div>
     </div>
   </section>
 

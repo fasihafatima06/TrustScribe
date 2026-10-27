@@ -171,7 +171,7 @@
 
   <!-- Export Report Modal Dialog -->
   <dialog class="app-dialog" id="exportDialog">
-    <div class="dialog-box">
+    <div class="dialog-box" style="max-width:720px;">
       <div class="dialog-header">
         <div>
           <span class="eyebrow" style="margin-bottom:4px;">RESEARCH-READY RECORDS</span>
@@ -184,41 +184,85 @@
         Choose your export format. Reports include timestamps, speaker labels, original text, English translations, dual-engine discrepancies, and human review audit statuses.
       </p>
 
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;">
-        <button class="feature-box" onclick="downloadExport('docx')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color);">
-          <div style="font-size:1.4rem; margin-bottom:6px;">📄</div>
-          <b>Word Document (.docx)</b>
-          <p style="font-size:0.78rem; color:var(--text-dim); margin-top:4px;">
-            Full report formatted for papers & fieldwork reports with verification table.
-          </p>
-        </button>
+      <div class="export-options-grid">
+        <!-- Word DOCX -->
+        <div class="export-card-btn" onclick="downloadExport('docx')">
+          <div class="export-badge-row">
+            <div class="export-icon-box" style="background:linear-gradient(135deg, #1d4ed8, #3b82f6); box-shadow:0 4px 12px rgba(37,99,235,0.35);">
+              DOC
+            </div>
+            <span class="badge badge-info" style="font-size:0.7rem;">Fieldwork Standard</span>
+          </div>
+          <div>
+            <div class="export-title">Word Document (.docx)</div>
+            <p class="export-desc">
+              Structured Microsoft Word document with project metadata, quality audit summary, glossary, and line-by-line verification table.
+            </p>
+          </div>
+          <span class="export-action-link">Download .docx ↓</span>
+        </div>
 
-        <button class="feature-box" onclick="downloadExport('pdf')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color);">
-          <div style="font-size:1.4rem; margin-bottom:6px;">📑</div>
-          <b>PDF Document (.pdf)</b>
-          <p style="font-size:0.78rem; color:var(--text-dim); margin-top:4px;">
-            Styled verification record with audit summary and status badges.
-          </p>
-        </button>
+        <!-- PDF -->
+        <div class="export-card-btn" onclick="downloadExport('pdf')">
+          <div class="export-badge-row">
+            <div class="export-icon-box" style="background:linear-gradient(135deg, #be123c, #f43f5e); box-shadow:0 4px 12px rgba(244,63,94,0.35);">
+              PDF
+            </div>
+            <span class="badge badge-warning" style="font-size:0.7rem;">Certified Record</span>
+          </div>
+          <div>
+            <div class="export-title">PDF Document (.pdf)</div>
+            <p class="export-desc">
+              Clean visual report with audit metrics, executive summary, verified speaker segments, and color-coded review badges.
+            </p>
+          </div>
+          <span class="export-action-link" style="color:#f43f5e;">Download .pdf ↓</span>
+        </div>
 
-        <button class="feature-box" onclick="downloadExport('txt')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color);">
-          <div style="font-size:1.4rem; margin-bottom:6px;">📝</div>
-          <b>Standard Text (.txt)</b>
-          <p style="font-size:0.78rem; color:var(--text-dim); margin-top:4px;">
-            Lightweight plain-text transcript with timestamp markers.
-          </p>
-        </button>
+        <!-- Standard Text -->
+        <div class="export-card-btn" onclick="downloadExport('txt')">
+          <div class="export-badge-row">
+            <div class="export-icon-box" style="background:linear-gradient(135deg, #059669, #10b981); box-shadow:0 4px 12px rgba(16,185,129,0.35);">
+              TXT
+            </div>
+            <span class="badge badge-success" style="font-size:0.7rem;">Lightweight</span>
+          </div>
+          <div>
+            <div class="export-title">Standard Text (.txt)</div>
+            <p class="export-desc">
+              Plain-text research transcript formatted with millisecond timestamps, dual-engine discrepancies, and human verification stamps.
+            </p>
+          </div>
+          <span class="export-action-link" style="color:#34d399;">Download .txt ↓</span>
+        </div>
 
-        <button class="feature-box" onclick="downloadExport('json')" style="cursor:pointer; text-align:left; border:1px solid var(--border-color);">
-          <div style="font-size:1.4rem; margin-bottom:6px;">📊</div>
-          <b>Structured JSON (.json)</b>
-          <p style="font-size:0.78rem; color:var(--text-dim); margin-top:4px;">
-            Raw machine-readable transcript with RapidFuzz scores and engine comparisons.
-          </p>
-        </button>
+        <!-- JSON -->
+        <div class="export-card-btn" onclick="downloadExport('json')">
+          <div class="export-badge-row">
+            <div class="export-icon-box" style="background:linear-gradient(135deg, #d97706, #06b6d4); box-shadow:0 4px 12px rgba(245,158,11,0.35);">
+              { }
+            </div>
+            <span class="badge badge-purple" style="font-size:0.7rem;">Machine Data</span>
+          </div>
+          <div>
+            <div class="export-title">Structured JSON (.json)</div>
+            <p class="export-desc">
+              Complete raw JSON dataset including RapidFuzz similarity ratios, Engine 1 & 2 outputs, and audit timestamps.
+            </p>
+          </div>
+          <span class="export-action-link" style="color:#06b6d4;">Download .json ↓</span>
+        </div>
       </div>
     </div>
   </dialog>
+
+  <!-- Video Player Preview Container (shown for MP4 files) -->
+  <div id="videoContainer" style="display:none; padding:12px 24px; background:#0b101c; border-bottom:1px solid var(--border-color); text-align:center;">
+    <video id="wsVideoMedia" controls style="max-height:280px; max-width:100%; border-radius:var(--radius-md); background:#000;"></video>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="wsToast" style="position:fixed; bottom:24px; right:24px; background:#1e293b; color:#fff; border:1px solid #3b82f6; padding:12px 20px; border-radius:var(--radius-md); box-shadow:0 10px 25px rgba(0,0,0,0.5); z-index:9999; display:none; font-size:0.85rem; align-items:center; gap:8px;"></div>
 
   <audio id="wsAudioMedia" preload="metadata"></audio>
 

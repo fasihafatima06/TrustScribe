@@ -208,6 +208,9 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // --- 5. Contact Form Submission ---
+  const contactSuccessCard = document.getElementById("contactSuccessCard");
+  const btnResetContact = document.getElementById("btnResetContact");
+
   if (contactForm) {
     contactForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -222,16 +225,27 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        const res = await api.request("/contact", {
+        await api.request("/contact", {
           method: "POST",
           body: JSON.stringify(payload)
         });
-        contactStatusMsg.style.display = "block";
-        contactStatusMsg.textContent = res.message || "Thank you! Inquiry received.";
+
+        contactForm.style.display = "none";
+        if (contactSuccessCard) {
+          contactSuccessCard.style.display = "block";
+          contactSuccessCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
         contactForm.reset();
       } catch (err) {
         alert("Could not send inquiry: " + err.message);
       }
+    });
+  }
+
+  if (btnResetContact) {
+    btnResetContact.addEventListener("click", () => {
+      if (contactSuccessCard) contactSuccessCard.style.display = "none";
+      if (contactForm) contactForm.style.display = "flex";
     });
   }
 });

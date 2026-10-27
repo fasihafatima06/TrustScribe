@@ -2,8 +2,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   let recordingId = urlParams.get("id") || "1";
 
-  // Audio Player Elements
+  // Audio & Video Media Elements
   const audio = document.getElementById("wsAudioMedia");
+  const video = document.getElementById("wsVideoMedia");
+  const videoContainer = document.getElementById("videoContainer");
   const playBtn = document.getElementById("wsPlayBtn");
   const timeDisplay = document.getElementById("wsTime");
   const track = document.getElementById("wsTrack");
@@ -11,6 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const speedSelect = document.getElementById("playbackSpeedSelect");
   const skipBackBtn = document.getElementById("btnSkipBack");
   const skipFwdBtn = document.getElementById("btnSkipFwd");
+  const wsToast = document.getElementById("wsToast");
 
   // Workspace Info Elements
   const projectTitle = document.getElementById("projectTitle");
@@ -41,6 +44,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   let segments = [];
   let currentFilter = "all";
   let searchQuery = "";
+  let isVideo = false;
+
+  // --- Toast Notification Helper ---
+  function showToast(msg, isSuccess = true) {
+    if (!wsToast) return;
+    wsToast.style.display = "flex";
+    wsToast.style.borderColor = isSuccess ? "#10b981" : "#f59e0b";
+    wsToast.innerHTML = `<span>${isSuccess ? '✓' : 'ℹ'}</span> <span>${msg}</span>`;
+    setTimeout(() => {
+      wsToast.style.display = "none";
+    }, 2800);
+  }
 
   // --- Initial Data Load ---
   async function loadRecordingWorkspace() {
@@ -52,8 +67,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       projectTitle.textContent = data.filename.replace(/\.[^/.]+$/, "").replace(/_/g, " ").replace("sample ", "").toUpperCase();
       recordingMeta.textContent = `${data.source_language} → ${data.target_language} • ${Math.round(data.duration_seconds)}s Audio • Trust Check Engine Active`;
 
-      // Set audio source
-      audio.src = `http://127.0.0.1:8000/stream-audio/${data.storage_filename}`;
+      // Set initial duration readout immediately so it never shows 00:00 / 00:00
+      const totalSec = Math.round(data.duration_seconds || 32);
+      const dMin = String(Math.floor(totalSec / 60)).padStart(2, '0');
+      const dSec = String(Math.floor(totalSec % 60)).padStart(2, '0');
+      timeDisplay.textContent = `00:00 / ${dMin}:${dSec}`;
+
+      // Media URL
+      const mediaUrl = `http://127.0.0.1:8000/stream-audio/${data.storage_filename}`;
+      const ext = data.storage_filename.split(".").pop().toLowerCase();
+      isVideo = ["mp4", "mov", "webm"].includes(ext);
+
+      if (isVideo && video && videoContainer) {
+        videoContainer.style.display = "block";
+        video.src = mediaUrl;
+      }
+      audio.src = mediaUrl;
 
       updateStatsCounters();
       renderSegments();
@@ -166,12 +195,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             </div>
             
             <div class="engine-diff-row">
-              <span style="color:var(--text-dim); font-size:0.75rem;">Engine 1 (Sarvam):</span>
+              <span style="color:var(--text-dim); font-size:0.75rem;">Engine 1 (Primary):</span>
               <span style="color:#cbd5e1;">${seg.raw_engine1_text || seg.original_text}</span>
               <button class="btn-secondary btn-pill" style="padding:2px 8px; font-size:0.72rem;" onclick="adoptEngineText(${seg.id}, 'e1')">Use This</button>
             </div>
             <div class="engine-diff-row">
-              <span style="color:var(--text-dim); font-size:0.75rem;">Engine 2 (Gemini):</span>
+              <span style="color:var(--text-dim); font-size:0.75rem;">Engine 2 (Verification):</span>
               <span style="color:#cbd5e1;">${seg.raw_engine2_text || seg.original_text}</span>
               <button class="btn-secondary btn-pill" style="padding:2px 8px; font-size:0.72rem;" onclick="adoptEngineText(${seg.id}, 'e2')">Use This</button>
             </div>
@@ -180,11 +209,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           <!-- Dual Column Editors -->
           <div class="seg-grid">
             <div class="seg-col">
-              <label>Original Spoken Transcript (Regional / Code-Mixed)</label>
+              <label>Original Spoken Transcript (Regional / Code-Mixed / English)</label>
               <textarea class="seg-textarea" id="origText_${seg.id}" onblur="saveOriginalText(${seg.id}, this.value)">${seg.original_text}</textarea>
             </div>
             <div class="seg-col">
-              <label>English Translation</label>
+              <label>English Translation / Verified Text</label>
               <textarea class="seg-textarea" id="transText_${seg.id}" onblur="saveTranslatedText(${seg.id}, this.value)">${seg.translated_text || ''}</textarea>
             </div>
           </div>
@@ -213,19 +242,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     }).join("");
   }
 
-  // --- Audio Playback Synchronization ---
+  // --- Audio / Video Playback Synchronization ---
+  function getActivePlayer() {
+    return (isVideo && video && !video.paused) ? video : audio;
+  }
+
   window.playSegmentAudio = function(startSec, endSec) {
     audio.currentTime = startSec;
+    if (isVideo && video) video.currentTime = startSec;
+
     audio.play().then(() => {
       playBtn.textContent = "⏸";
-    }).catch(err => console.log("Audio play notice:", err));
+      if (isVideo && video) video.play().catch(() => {});
+    }).catch(err => {
+      // If audio fails on video format, try playing video directly
+      if (isVideo && video) {
+        video.play().then(() => { playBtn.textContent = "⏸"; }).catch(() => {});
+      }
+    });
   };
 
   playBtn.addEventListener("click", () => {
-    if (audio.paused) {
-      audio.play().then(() => playBtn.textContent = "⏸").catch(() => {});
+    const isPaused = audio.paused && (!video || video.paused);
+    if (isPaused) {
+      audio.play().then(() => {
+        playBtn.textContent = "⏸";
+        if (isVideo && video) video.play().catch(() => {});
+      }).catch(() => {
+        if (isVideo && video) {
+          video.play().then(() => { playBtn.textContent = "⏸"; }).catch(() => {});
+        }
+      });
     } else {
       audio.pause();
+      if (isVideo && video) video.pause();
       playBtn.textContent = "▶";
     }
   });
@@ -238,22 +288,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   skipBackBtn.addEventListener("click", () => {
-    audio.currentTime = Math.max(0, audio.currentTime - 5);
+    const target = Math.max(0, audio.currentTime - 5);
+    audio.currentTime = target;
+    if (isVideo && video) video.currentTime = target;
   });
 
   skipFwdBtn.addEventListener("click", () => {
-    audio.currentTime = Math.min(audio.duration || 9999, audio.currentTime + 5);
+    const target = Math.min(audio.duration || (currentRecording ? currentRecording.duration_seconds : 9999), audio.currentTime + 5);
+    audio.currentTime = target;
+    if (isVideo && video) video.currentTime = target;
   });
 
   speedSelect.addEventListener("change", (e) => {
-    audio.playbackRate = parseFloat(e.target.value);
+    const r = parseFloat(e.target.value);
+    audio.playbackRate = r;
+    if (isVideo && video) video.playbackRate = r;
   });
 
-  audio.addEventListener("timeupdate", () => {
-    if (!audio.duration) return;
-    const cur = audio.currentTime;
-    const dur = audio.duration;
-    fill.style.width = `${(cur / dur) * 100}%`;
+  function onMediaTimeUpdate(player) {
+    const cur = player.currentTime;
+    const dur = player.duration || (currentRecording ? currentRecording.duration_seconds : 32.0);
+    fill.style.width = `${Math.min(100, (cur / dur) * 100)}%`;
 
     const cMin = String(Math.floor(cur / 60)).padStart(2, '0');
     const cSec = String(Math.floor(cur % 60)).padStart(2, '0');
@@ -274,7 +329,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         el.classList.remove("playing");
       }
     });
-  });
+  }
+
+  audio.addEventListener("timeupdate", () => onMediaTimeUpdate(audio));
+  if (video) video.addEventListener("timeupdate", () => onMediaTimeUpdate(video));
 
   audio.addEventListener("ended", () => {
     playBtn.textContent = "▶";
@@ -284,9 +342,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   track.addEventListener("click", (e) => {
     const rect = track.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    if (audio.duration) {
-      audio.currentTime = ratio * audio.duration;
-    }
+    const dur = audio.duration || (currentRecording ? currentRecording.duration_seconds : 32.0);
+    const targetTime = ratio * dur;
+    audio.currentTime = targetTime;
+    if (isVideo && video) video.currentTime = targetTime;
   });
 
   // --- Inline Segment Updates ---
@@ -298,6 +357,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       method: "PATCH",
       body: JSON.stringify({ original_text: val })
     });
+    showToast("Transcript line saved");
   };
 
   window.saveTranslatedText = async function(segId, val) {
@@ -308,6 +368,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       method: "PATCH",
       body: JSON.stringify({ translated_text: val })
     });
+    showToast("Translation saved");
   };
 
   window.saveSpeaker = async function(segId, val) {
@@ -318,6 +379,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       method: "PATCH",
       body: JSON.stringify({ speaker_tag: val })
     });
+    showToast(`Speaker updated to "${val}"`);
   };
 
   window.setSegmentStatus = async function(segId, status) {
@@ -328,8 +390,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       seg.is_flagged = false;
       seg.reviewer_id = api.getUser().full_name || "Researcher";
       seg.reviewed_at = new Date().toISOString();
+      showToast("Segment marked as Human-Reviewed ✓");
     } else if (status === "review_suggested") {
       seg.is_flagged = true;
+      showToast("Line flagged for review ⚠", false);
+    } else if (status === "unclear") {
+      showToast("Marked as unclear acoustic audio", false);
     }
 
     updateStatsCounters();
@@ -358,13 +424,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const textarea = document.getElementById(`origText_${segId}`);
     if (textarea) textarea.value = text;
     saveOriginalText(segId, text);
+    showToast("Applied engine variant text");
   };
 
   // --- Next Flagged Line Jumper ---
   btnNextFlagged.addEventListener("click", () => {
     const nextFlagged = segments.find(s => s.review_status === "review_suggested" || s.is_flagged);
     if (!nextFlagged) {
-      alert("All flagged lines have been reviewed!");
+      showToast("All flagged lines have been reviewed! 🎉");
       return;
     }
     const card = document.getElementById(`segCard_${nextFlagged.id}`);
@@ -431,6 +498,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       document.getElementById("newGlossaryForm").reset();
       await loadGlossaryTable();
+      showToast(`Added "${term}" to project glossary`);
     } catch (err) {
       alert("Error adding glossary term: " + err.message);
     }
@@ -439,6 +507,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.deleteGlossaryItem = async function(id) {
     await api.request(`/projects/${currentRecording.project_id}/glossary/${id}`, { method: "DELETE" });
     await loadGlossaryTable();
+    showToast("Glossary term removed");
   };
 
   document.getElementById("applyGlossaryBtn").addEventListener("click", async () => {
@@ -448,6 +517,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const res = await api.request(`/recordings/${recordingId}/glossary/apply`, { method: "POST" });
       feedback.textContent = `Applied! Standardized ${res.standardized_replacements} misspellings across transcript.`;
       await loadRecordingWorkspace();
+      showToast(`Standardized ${res.standardized_replacements} terms across transcript`);
     } catch (err) {
       feedback.textContent = `Standardization error: ${err.message}`;
     }
@@ -489,6 +559,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.downloadExport = function(format) {
     const url = `http://127.0.0.1:8000/api/recordings/${recordingId}/export/${format}`;
     window.open(url, "_blank");
+    showToast(`Downloading .${format} report...`);
     exportDialog.close();
   };
 

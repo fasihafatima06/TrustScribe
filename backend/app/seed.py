@@ -1,7 +1,5 @@
 import os
-import math
-import wave
-import struct
+import subprocess
 import datetime
 from sqlalchemy.orm import Session
 from .models import User, Project, Recording, TranscriptSegment, GlossaryItem, Insight
@@ -11,34 +9,17 @@ from .services.insights import generate_interview_summary_and_insights
 
 UPLOAD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "uploads"))
 
-def generate_sample_wav_if_missing(file_path: str, duration_sec: float = 32.0):
-    if os.path.exists(file_path) and os.path.getsize(file_path) > 1000:
+def generate_sample_wav_if_missing(file_path: str, spoken_text: str = "Hello, this is a spoken audio recording for TrustScribe."):
+    if os.path.exists(file_path) and os.path.getsize(file_path) > 10000:
         return
     
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    sample_rate = 16000
-    n_samples = int(sample_rate * duration_sec)
-
-    with wave.open(file_path, "w") as wav_file:
-        wav_file.setnchannels(1) # mono
-        wav_file.setsampwidth(2) # 16-bit
-        wav_file.setframerate(sample_rate)
-
-        frames = bytearray()
-        for i in range(n_samples):
-            t = i / sample_rate
-            # 5-second phrase cadences with human pitch variations (160Hz - 240Hz)
-            phrase_pos = (t % 5.5) / 5.5
-            if phrase_pos < 0.78:
-                f0 = 190.0 + 35.0 * math.sin(2 * math.pi * 1.8 * t) + 15.0 * math.sin(2 * math.pi * 4.2 * t)
-                val = 0.45 * math.sin(2 * math.pi * f0 * t) + 0.25 * math.sin(2 * math.pi * 2 * f0 * t) + 0.12 * math.sin(2 * math.pi * 3 * f0 * t)
-                sample_val = int(val * 14000)
-            else:
-                sample_val = 0 # conversational pause
-            
-            frames.extend(struct.pack("<h", max(-32768, min(32767, sample_val))))
-        
-        wav_file.writeframes(frames)
+    try:
+        clean_text = spoken_text.replace("'", "").replace('"', '')
+        ps_cmd = f"Add-Type -AssemblyName System.Speech; $s = New-Object System.Speech.Synthesis.SpeechSynthesizer; $s.SetOutputToWaveFile('{file_path}'); $s.Speak('{clean_text}'); $s.Dispose()"
+        subprocess.run(["powershell", "-Command", ps_cmd], check=True, timeout=15)
+    except Exception as e:
+        print(f"[Seed Speech Warning] {e}")
 
 def seed_database_samples(db: Session):
     # Ensure guest user exists
@@ -58,17 +39,26 @@ def seed_database_samples(db: Session):
     # Sample 1: Rural Payments Interview (Telugu + English)
     fn_te = "sample_rural_payments_telugu_en.wav"
     path_te = os.path.join(UPLOAD_DIR, fn_te)
-    generate_sample_wav_if_missing(path_te, 32.0)
+    generate_sample_wav_if_missing(
+        path_te,
+        "Namaskaram andi. How are you using digital payments in your village? Here, network weak undi, so payment process avvaledu. Money was deducted from the account, but merchant received no confirmation."
+    )
 
     # Sample 2: Digital Banking & UPI (Hindi + English)
     fn_hi = "sample_digital_banking_hindi_en.wav"
     path_hi = os.path.join(UPLOAD_DIR, fn_hi)
-    generate_sample_wav_if_missing(path_hi, 31.0)
+    generate_sample_wav_if_missing(
+        path_hi,
+        "Namaste. Can you share how you use UPI and Google Pay in your daily routine? Ration shop par network down hota hai toh payment atak jati hai."
+    )
 
     # Sample 3: Healthcare Access (Tamil + English)
     fn_ta = "sample_healthcare_tamil_en.wav"
     path_ta = os.path.join(UPLOAD_DIR, fn_ta)
-    generate_sample_wav_if_missing(path_ta, 32.0)
+    generate_sample_wav_if_missing(
+        path_ta,
+        "Vanakkam. How has your experience been getting doctor appointments at the Primary Health Centre? Token queue is very long in the morning."
+    )
 
     # Check if primary sample project exists
     existing = db.query(Recording).filter(Recording.filename == fn_te).first()

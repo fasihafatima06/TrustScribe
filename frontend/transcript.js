@@ -1,2 +1,2 @@
-// Delegates to js/transcript.js
+// Re-export / import js/transcript.js
 import "./js/transcript.js";
