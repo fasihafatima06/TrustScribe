@@ -196,14 +196,14 @@ document.addEventListener("DOMContentLoaded", () => {
       btnM.classList.remove("active");
       btnA.classList.add("active");
       pFree.innerHTML = `₹0<span style="font-size:0.9rem; color:#64748b;"> / month (billed annually)</span>`;
-      pRes.innerHTML = `₹399<span style="font-size:0.9rem; color:#64748b;"> / month (billed annually)</span>`;
-      pPro.innerHTML = `₹1,199<span style="font-size:0.9rem; color:#64748b;"> / month (billed annually)</span>`;
+      pRes.innerHTML = `₹599<span style="font-size:0.9rem; color:#64748b;"> / month (billed annually)</span>`;
+      pPro.innerHTML = `₹2,299<span style="font-size:0.9rem; color:#64748b;"> / month (billed annually)</span>`;
     } else {
       btnA.classList.remove("active");
       btnM.classList.add("active");
       pFree.innerHTML = `₹0<span style="font-size:0.9rem; color:#64748b;"> / month</span>`;
-      pRes.innerHTML = `₹499<span style="font-size:0.9rem; color:#64748b;"> / month</span>`;
-      pPro.innerHTML = `₹1,499<span style="font-size:0.9rem; color:#64748b;"> / month</span>`;
+      pRes.innerHTML = `₹799<span style="font-size:0.9rem; color:#64748b;"> / month</span>`;
+      pPro.innerHTML = `₹2,499<span style="font-size:0.9rem; color:#64748b;"> / month</span>`;
     }
   };
 

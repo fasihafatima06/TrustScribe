@@ -11,36 +11,43 @@
 </head>
 <body class="workspace-page">
 
-  <!-- Top Navigation & Project Info -->
+  <!-- Top Navigation Bar (Matching Image 3) -->
   <header class="ws-top-bar">
-    <div class="ws-title-group">
-      <a href="index.html" class="logo-group">
-        <div class="logo-icon">TS</div>
-        <span style="font-size:1.1rem;">TrustScribe</span>
+    <div style="display:flex; align-items:center; gap:16px;">
+      <a href="dashboard.html" class="btn-secondary btn-pill" style="padding:6px 14px; font-size:0.85rem;">
+        ← Dashboard
       </a>
-      <span style="color:var(--border-color);">|</span>
-      <div>
-        <h2 id="projectTitle" style="font-size:1.05rem; font-weight:700; margin:0;">Loading Interview Workspace...</h2>
-        <span id="recordingMeta" style="font-size:0.75rem; color:var(--text-muted);">Acoustic Verification Session</span>
+      <div class="ws-title-box">
+        <h2 id="projectTitle" style="font-size:0.95rem; font-weight:700; margin:0; color:#f8fafc;">
+          Loading Fieldwork Workspace...
+        </h2>
+        <span class="save-status-pill">✓ Saved</span>
       </div>
     </div>
 
-    <div class="ws-actions-group">
-      <button class="btn-secondary btn-pill" id="openGlossaryBtn">📚 Research Glossary</button>
-      <button class="btn-secondary btn-pill" id="openInsightsBtn">💡 AI Insights & Summary</button>
-      <button class="btn-primary btn-pill" id="openExportBtn">📥 Export Report</button>
-      <a href="index.html" class="btn-secondary btn-pill" style="padding:6px 12px;">← Home</a>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span id="recordingMeta" style="font-size:0.75rem; color:var(--text-dim);">Telugu + English • 28:45 Audio</span>
+      <button class="btn-primary btn-pill" id="openExportBtn" style="padding:8px 18px; font-size:0.85rem; font-weight:700;">
+        Download Verification Report ↓
+      </button>
+      <a href="index.html" class="btn-secondary btn-pill" style="padding:6px 12px; font-size:0.8rem;">
+        Home
+      </a>
     </div>
   </header>
 
-  <!-- Sticky Audio Playback Bar -->
+  <!-- Audio Player Bar (Matching Image 3) -->
   <section class="ws-audio-bar">
-    <button class="play-btn-circle" id="wsPlayBtn" title="Play / Pause Audio (Spacebar)">▶</button>
-    <button class="btn-secondary btn-pill" id="btnSkipBack" title="Skip back 5s" style="padding:6px 10px;">-5s</button>
-    <button class="btn-secondary btn-pill" id="btnSkipFwd" title="Skip forward 5s" style="padding:6px 10px;">+5s</button>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <button class="play-btn-circle" id="wsPlayBtn" title="Play / Pause Audio (Spacebar)">▶</button>
+      <button class="btn-secondary btn-pill" id="wsStopBtn" title="Stop & Rewind" style="padding:6px 10px; font-size:0.75rem;">⏹</button>
+    </div>
+    
+    <button class="btn-secondary btn-pill" id="btnSkipBack" title="Skip back 5s" style="padding:6px 10px; font-size:0.78rem;">-5s</button>
+    <button class="btn-secondary btn-pill" id="btnSkipFwd" title="Skip forward 5s" style="padding:6px 10px; font-size:0.78rem;">+5s</button>
     
     <div class="scrubber-wrap">
-      <span class="time-readout" id="wsTime">00:00 / 00:00</span>
+      <span class="time-readout" id="wsTime">00:00 / 28:45</span>
       <div class="scrubber-track" id="wsTrack">
         <div class="scrubber-fill" id="wsFill" style="width:0%;"></div>
       </div>
@@ -50,7 +57,7 @@
       <span style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase;">Speed:</span>
       <select id="playbackSpeedSelect" class="form-input" style="padding:4px 8px; font-size:0.8rem; width:80px; background:#0d131f;">
         <option value="0.75">0.75x</option>
-        <option value="1.0" selected>1.0x</option>
+        <option value="1.0" selected>Speed 1</option>
         <option value="1.25">1.25x</option>
         <option value="1.5">1.5x</option>
         <option value="2.0">2.0x</option>
@@ -58,213 +65,209 @@
     </div>
   </section>
 
-  <!-- Verification Stats Banner -->
-  <div class="ws-stats-banner">
-    <div style="display:flex; align-items:center; gap:20px;">
-      <div id="statReviewed">
-        <b style="color:#34d399;">Human-Reviewed:</b> <span id="countReviewed">0 / 0 (0%)</span>
-      </div>
-      <div id="statFlagged">
-        <b style="color:#fbbf24;">Review Suggested:</b> <span id="countFlagged">0 lines</span>
-      </div>
-      <div id="statUnverified" style="color:var(--text-dim);">
-        <b>Unverified:</b> <span id="countUnverified">0 lines</span>
-      </div>
-    </div>
-
-    <button class="btn-secondary btn-pill" id="btnNextFlagged" style="border-color:#f59e0b; color:#fbbf24;">
-      ⚡ Jump to Next Flagged Line
-    </button>
+  <!-- Video Player Preview Container (shown for MP4 files) -->
+  <div id="videoContainer" style="display:none; padding:12px 24px; background:#0b101c; border-bottom:1px solid var(--border-color); text-align:center;">
+    <video id="wsVideoMedia" controls style="max-height:260px; max-width:100%; border-radius:var(--radius-md); background:#000;"></video>
   </div>
 
-  <!-- Filter & Search Toolbar -->
-  <div class="ws-toolbar">
-    <div class="filter-pills" id="filterPills">
-      <button class="filter-pill active" data-filter="all">All (<span id="pillAll">0</span>)</button>
-      <button class="filter-pill" data-filter="review_suggested">Review Suggested (<span id="pillFlagged">0</span>)</button>
-      <button class="filter-pill" data-filter="human_reviewed">Human-Reviewed (<span id="pillReviewed">0</span>)</button>
-      <button class="filter-pill" data-filter="unverified">Unverified (<span id="pillUnverified">0</span>)</button>
-      <button class="filter-pill" data-filter="unclear">Unclear (<span id="pillUnclear">0</span>)</button>
-    </div>
-
-    <div style="width:280px;">
-      <input type="text" id="transcriptSearch" class="form-input" placeholder="🔍 Search transcript lines..." style="padding:6px 12px; font-size:0.85rem;">
-    </div>
-  </div>
-
-  <!-- Main Transcript Verification Stream -->
-  <main class="ws-segments-container" id="segmentsContainer">
-    <p style="color:var(--text-muted); text-align:center; padding:40px;">Loading interview verification data...</p>
-  </main>
-
-  <!-- Research Glossary Modal Dialog -->
-  <dialog class="app-dialog" id="glossaryDialog">
-    <div class="dialog-box">
-      <div class="dialog-header">
-        <div>
-          <span class="eyebrow" style="margin-bottom:4px;">REUSABLE FIELDWORK GLOSSARY</span>
-          <h3 style="margin:0;">Approved Terminology & Spellings</h3>
+  <!-- Main Two-Column Layout (Matching Image 3) -->
+  <div class="ws-main-layout">
+    
+    <!-- Left Column: Transcript Stream -->
+    <div class="ws-transcript-col">
+      <!-- Toolbar & Filters -->
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#111827; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 16px;">
+        <div class="filter-pills" id="filterPills">
+          <button class="filter-pill active" data-filter="all">All Lines (<span id="pillAll">17</span>)</button>
+          <button class="filter-pill" data-filter="review_suggested" style="border-color:rgba(245,158,11,0.4); color:#fbbf24;">
+            ⚠ Review Suggested (<span id="pillFlagged">3</span>)
+          </button>
+          <button class="filter-pill" data-filter="human_reviewed">
+            ✓ Human-Reviewed (<span id="pillReviewed">2</span>)
+          </button>
         </div>
-        <button class="dialog-close" onclick="document.getElementById('glossaryDialog').close()">×</button>
+
+        <div style="width:240px;">
+          <input type="text" id="transcriptSearch" class="form-input" placeholder="🔍 Search transcript..." style="padding:5px 12px; font-size:0.82rem;">
+        </div>
       </div>
 
-      <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:18px;">
-        Standardize spelling for names, places, government schemes, and technical jargon across your research interviews.
-      </p>
+      <!-- Transcript Rows Container -->
+      <main id="segmentsContainer" style="display:flex; flex-direction:column; gap:10px;">
+        <p style="color:var(--text-muted); text-align:center; padding:40px;">Loading interview verification data...</p>
+      </main>
+    </div>
 
-      <div style="margin-bottom:20px; max-height:220px; overflow-y:auto; border:1px solid var(--border-color); border-radius:var(--radius-md);">
-        <table style="width:100%; border-collapse:collapse; font-size:0.85rem;" id="glossaryTable">
-          <thead>
-            <tr style="background:#0d131f; border-bottom:1px solid var(--border-color); text-align:left; color:var(--text-dim);">
-              <th style="padding:8px 12px;">Approved Term</th>
-              <th style="padding:8px 12px;">Category</th>
-              <th style="padding:8px 12px;">Notes</th>
-              <th style="padding:8px 12px; width:40px;"></th>
-            </tr>
-          </thead>
-          <tbody id="glossaryTbody"></tbody>
-        </table>
+    <!-- Right Column: Inspector & Tools (Matching Image 3) -->
+    <aside class="ws-sidebar-col">
+      <!-- Tab Navigation -->
+      <div class="sidebar-tab-bar">
+        <button class="sidebar-tab-btn active" data-tab="toolsTab">Tools & Review</button>
+        <button class="sidebar-tab-btn" data-tab="insightsTab">AI Insights</button>
+        <button class="sidebar-tab-btn" data-tab="glossaryTab">Glossary</button>
       </div>
 
-      <!-- Add New Glossary Term -->
-      <form id="newGlossaryForm" style="display:grid; grid-template-columns:1fr 120px 1.2fr auto; gap:8px; margin-bottom:16px;">
-        <input type="text" class="form-input" id="newGlossaryTerm" placeholder="Approved term" required style="padding:6px 10px; font-size:0.82rem;">
-        <select class="form-input" id="newGlossaryCat" style="padding:6px 8px; font-size:0.82rem; background:#0d131f;">
-          <option value="Terminology">Terminology</option>
-          <option value="Organization">Organization</option>
-          <option value="Name">Person Name</option>
-          <option value="Place">Place Name</option>
-        </select>
-        <input type="text" class="form-input" id="newGlossaryDesc" placeholder="Context notes" style="padding:6px 10px; font-size:0.82rem;">
-        <button type="submit" class="btn-primary btn-pill" style="padding:6px 14px;">+ Add</button>
-      </form>
+      <!-- Tab 1: Tools & Review -->
+      <div class="sidebar-tab-content" id="toolsTab">
+        <!-- Review Burden Summary Box -->
+        <div style="background:#0d131f; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:14px; margin-bottom:18px;">
+          <h4 style="font-size:0.75rem; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px; letter-spacing:0.5px;">
+            Verification Efficiency
+          </h4>
+          <div style="font-size:0.85rem; line-height:1.6; margin-bottom:10px;">
+            <div><b style="color:#fbbf24;">Flagged for Review:</b> <span id="sideCountFlagged">3 lines</span></div>
+            <div><b style="color:#34d399;">Automatically Verified:</b> <span id="sideCountAuto">14 lines</span></div>
+            <div style="color:var(--text-muted); font-size:0.75rem; margin-top:4px;">
+              Only inspect the 3 flagged lines to certify the full 28-minute interview.
+            </div>
+          </div>
+          <button class="btn-primary" id="btnNextFlagged" style="width:100%; padding:8px 12px; font-size:0.82rem;">
+            ⚡ Jump to Next Flagged Line
+          </button>
+        </div>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-color); padding-top:14px;">
-        <span style="font-size:0.8rem; color:var(--text-dim);" id="glossaryFeedback"></span>
-        <button class="btn-secondary btn-pill" id="applyGlossaryBtn" style="border-color:#3b82f6; color:#60a5fa;">
-          ✦ Standardize Transcript Spellings
+        <!-- Confidence Slider (Matching Image 3) -->
+        <div style="margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:16px;">
+          <label style="display:block; font-size:0.78rem; font-weight:600; color:#e2e8f0; margin-bottom:6px;">
+            Highlight words with confidence level below: <span id="confValueDisplay" style="color:#60a5fa;">75%</span>
+          </label>
+          <input type="range" id="confSlider" min="25" max="95" value="75" style="width:100%; accent-color:#3b82f6;">
+          <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-dim); margin-top:2px;">
+            <span>25%</span>
+            <span>50%</span>
+            <span>75%</span>
+            <span>95%</span>
+          </div>
+        </div>
+
+        <!-- Search and Replace (Matching Image 3) -->
+        <div style="margin-bottom:20px;">
+          <h4 style="font-size:0.78rem; font-weight:700; color:#e2e8f0; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">
+            Search and Replace
+          </h4>
+          <input type="text" id="srSearchInput" class="form-input" placeholder="Search term..." style="margin-bottom:6px; font-size:0.82rem; padding:6px 10px;">
+          <input type="text" id="srReplaceInput" class="form-input" placeholder="Replace with..." style="margin-bottom:8px; font-size:0.82rem; padding:6px 10px;">
+          <div style="display:flex; gap:6px;">
+            <button class="btn-secondary btn-pill" id="btnReplaceAll" style="padding:6px 12px; font-size:0.78rem;">
+              Replace All
+            </button>
+          </div>
+        </div>
+
+        <!-- Language Meta -->
+        <div style="background:#0d131f; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:12px; font-size:0.8rem; color:var(--text-muted);">
+          <div><b>Audio language:</b> <span id="sideAudioLang">Telugu + English</span></div>
+          <div><b>Translation:</b> English</div>
+        </div>
+      </div>
+
+      <!-- Tab 2: AI Insights (Plain English & Clear) -->
+      <div class="sidebar-tab-content" id="insightsTab" style="display:none;">
+        <div style="background:#0d131f; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:14px; margin-bottom:14px;">
+          <h4 style="font-size:0.75rem; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; letter-spacing:0.5px;">
+            Executive Summary
+          </h4>
+          <p id="sideSummaryText" style="font-size:0.85rem; line-height:1.5; color:#cbd5e1;"></p>
+        </div>
+
+        <h4 style="font-size:0.75rem; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px; letter-spacing:0.5px;">
+          Key Thematic Findings
+        </h4>
+        <div id="sideInsightsList" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </div>
+
+      <!-- Tab 3: Reusable Glossary -->
+      <div class="sidebar-tab-content" id="glossaryTab" style="display:none;">
+        <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">
+          Approved terminology, scheme titles, and names standardized across this project.
+        </p>
+
+        <div style="border:1px solid var(--border-color); border-radius:var(--radius-md); max-height:220px; overflow-y:auto; margin-bottom:12px;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+            <tbody id="glossaryTbody"></tbody>
+          </table>
+        </div>
+
+        <form id="sideGlossaryForm" style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
+          <input type="text" id="sideGlossaryTerm" class="form-input" placeholder="Approved term (e.g. Rythu Bharosa)" required style="padding:6px 10px; font-size:0.8rem;">
+          <input type="text" id="sideGlossaryDesc" class="form-input" placeholder="Notes (scheme, place, person)" style="padding:6px 10px; font-size:0.8rem;">
+          <button type="submit" class="btn-secondary btn-pill" style="padding:6px; font-size:0.78rem;">+ Add Term</button>
+        </form>
+
+        <button class="btn-primary btn-pill" id="btnApplyGlossarySide" style="width:100%; padding:8px; font-size:0.8rem;">
+          ✦ Apply Glossary to Transcript
         </button>
       </div>
-    </div>
-  </dialog>
+    </aside>
+  </div>
 
-  <!-- AI Insights & Summary Modal Dialog -->
-  <dialog class="app-dialog" id="insightsDialog">
-    <div class="dialog-box" style="max-width:750px;">
-      <div class="dialog-header">
-        <div>
-          <span class="eyebrow" style="margin-bottom:4px;">FIELDWORK SYNTHESIS</span>
-          <h3 style="margin:0;">Executive Summary & Evidence Insights</h3>
-        </div>
-        <button class="dialog-close" onclick="document.getElementById('insightsDialog').close()">×</button>
-      </div>
-
-      <div style="background:#0d131f; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:16px; margin-bottom:20px;">
-        <h4 style="font-size:0.75rem; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; letter-spacing:0.5px;">Executive Research Summary</h4>
-        <p id="dialogSummaryText" style="color:var(--text-main); font-size:0.9rem; line-height:1.6;"></p>
-      </div>
-
-      <h4 style="font-size:0.75rem; text-transform:uppercase; color:var(--text-dim); margin-bottom:10px; letter-spacing:0.5px;">Evidence-Linked Thematic Insights</h4>
-      <div id="dialogInsightsList" style="display:flex; flex-direction:column; gap:12px; max-height:280px; overflow-y:auto; padding-right:6px;"></div>
-    </div>
-  </dialog>
-
-  <!-- Export Report Modal Dialog -->
+  <!-- Download Verification Report Modal (Exact Match to User Image 1) -->
   <dialog class="app-dialog" id="exportDialog">
-    <div class="dialog-box" style="max-width:720px;">
-      <div class="dialog-header">
-        <div>
-          <span class="eyebrow" style="margin-bottom:4px;">RESEARCH-READY RECORDS</span>
-          <h3 style="margin:0;">Download Verification Report</h3>
-        </div>
-        <button class="dialog-close" onclick="document.getElementById('exportDialog').close()">×</button>
+    <div class="export-dialog-box">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">
+        <h3 class="export-modal-title">Download Verification Report</h3>
+        <button class="dialog-close" onclick="document.getElementById('exportDialog').close()" style="color:#94a3b8; font-size:1.6rem; line-height:1; cursor:pointer;">×</button>
       </div>
 
-      <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:20px;">
+      <p class="export-modal-desc">
         Choose your export format. Reports include timestamps, speaker labels, original text, English translations, dual-engine discrepancies, and human review audit statuses.
       </p>
 
-      <div class="export-options-grid">
-        <!-- Word DOCX -->
-        <div class="export-card-btn" onclick="downloadExport('docx')">
-          <div class="export-badge-row">
-            <div class="export-icon-box" style="background:linear-gradient(135deg, #1d4ed8, #3b82f6); box-shadow:0 4px 12px rgba(37,99,235,0.35);">
-              DOC
-            </div>
-            <span class="badge badge-info" style="font-size:0.7rem;">Fieldwork Standard</span>
-          </div>
-          <div>
-            <div class="export-title">Word Document (.docx)</div>
-            <p class="export-desc">
-              Structured Microsoft Word document with project metadata, quality audit summary, glossary, and line-by-line verification table.
-            </p>
-          </div>
-          <span class="export-action-link">Download .docx ↓</span>
+      <h4 class="export-modal-subhead">Download as</h4>
+
+      <div class="export-2x2-grid">
+        <!-- Word doc -->
+        <div class="export-tile-img1" onclick="downloadExport('docx')">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <div class="tile-name">Word doc</div>
+          <div class="tile-ext">(.docx)</div>
         </div>
 
         <!-- PDF -->
-        <div class="export-card-btn" onclick="downloadExport('pdf')">
-          <div class="export-badge-row">
-            <div class="export-icon-box" style="background:linear-gradient(135deg, #be123c, #f43f5e); box-shadow:0 4px 12px rgba(244,63,94,0.35);">
-              PDF
-            </div>
-            <span class="badge badge-warning" style="font-size:0.7rem;">Certified Record</span>
-          </div>
-          <div>
-            <div class="export-title">PDF Document (.pdf)</div>
-            <p class="export-desc">
-              Clean visual report with audit metrics, executive summary, verified speaker segments, and color-coded review badges.
-            </p>
-          </div>
-          <span class="export-action-link" style="color:#f43f5e;">Download .pdf ↓</span>
+        <div class="export-tile-img1" onclick="downloadExport('pdf')">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <div class="tile-name">PDF</div>
+          <div class="tile-ext">(.pdf)</div>
         </div>
 
-        <!-- Standard Text -->
-        <div class="export-card-btn" onclick="downloadExport('txt')">
-          <div class="export-badge-row">
-            <div class="export-icon-box" style="background:linear-gradient(135deg, #059669, #10b981); box-shadow:0 4px 12px rgba(16,185,129,0.35);">
-              TXT
-            </div>
-            <span class="badge badge-success" style="font-size:0.7rem;">Lightweight</span>
-          </div>
-          <div>
-            <div class="export-title">Standard Text (.txt)</div>
-            <p class="export-desc">
-              Plain-text research transcript formatted with millisecond timestamps, dual-engine discrepancies, and human verification stamps.
-            </p>
-          </div>
-          <span class="export-action-link" style="color:#34d399;">Download .txt ↓</span>
+        <!-- Text -->
+        <div class="export-tile-img1" onclick="downloadExport('txt')">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <div class="tile-name">Text</div>
+          <div class="tile-ext">(.txt)</div>
         </div>
 
         <!-- JSON -->
-        <div class="export-card-btn" onclick="downloadExport('json')">
-          <div class="export-badge-row">
-            <div class="export-icon-box" style="background:linear-gradient(135deg, #d97706, #06b6d4); box-shadow:0 4px 12px rgba(245,158,11,0.35);">
-              { }
-            </div>
-            <span class="badge badge-purple" style="font-size:0.7rem;">Machine Data</span>
-          </div>
-          <div>
-            <div class="export-title">Structured JSON (.json)</div>
-            <p class="export-desc">
-              Complete raw JSON dataset including RapidFuzz similarity ratios, Engine 1 & 2 outputs, and audit timestamps.
-            </p>
-          </div>
-          <span class="export-action-link" style="color:#06b6d4;">Download .json ↓</span>
+        <div class="export-tile-img1" onclick="downloadExport('json')">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <div class="tile-name">JSON</div>
+          <div class="tile-ext">(.json)</div>
         </div>
       </div>
     </div>
   </dialog>
 
-  <!-- Video Player Preview Container (shown for MP4 files) -->
-  <div id="videoContainer" style="display:none; padding:12px 24px; background:#0b101c; border-bottom:1px solid var(--border-color); text-align:center;">
-    <video id="wsVideoMedia" controls style="max-height:280px; max-width:100%; border-radius:var(--radius-md); background:#000;"></video>
-  </div>
+  <!-- Audio Element -->
+  <audio id="wsAudioMedia" preload="metadata"></audio>
 
   <!-- Toast Notification -->
   <div id="wsToast" style="position:fixed; bottom:24px; right:24px; background:#1e293b; color:#fff; border:1px solid #3b82f6; padding:12px 20px; border-radius:var(--radius-md); box-shadow:0 10px 25px rgba(0,0,0,0.5); z-index:9999; display:none; font-size:0.85rem; align-items:center; gap:8px;"></div>
-
-  <audio id="wsAudioMedia" preload="metadata"></audio>
 
   <script src="js/api.js"></script>
   <script src="js/transcript.js"></script>

@@ -91,7 +91,7 @@ def seed_database_samples(db: Session):
             storage_filename=fn_te,
             file_path=path_te,
             file_size_bytes=os.path.getsize(path_te) if os.path.exists(path_te) else 1024000,
-            duration_seconds=31.8,
+            duration_seconds=1725.0, # 28 minutes 45 seconds research fieldwork interview
             source_language="Telugu + English (Code-mixed)",
             target_language="English",
             status="ready"
@@ -102,7 +102,11 @@ def seed_database_samples(db: Session):
 
         raw_segs = get_realistic_interview_template(fn_te)
         for s in raw_segs:
-            comp = compare_engine_segments(s["engine1_text"], s["engine2_text"], s["confidence"])
+            is_flg = s.get("is_flagged", False)
+            rev_stat = s.get("review_status", "unverified")
+            comp_score = s.get("comparison_score", 0.72 if is_flg else 0.98)
+            flg_rsn = s.get("flag_reason", None)
+
             seg_db = TranscriptSegment(
                 recording_id=recording.id,
                 segment_order=s["order"],
@@ -114,14 +118,14 @@ def seed_database_samples(db: Session):
                 translated_text=s["translation"],
                 raw_engine1_text=s["engine1_text"],
                 raw_engine2_text=s["engine2_text"],
-                comparison_score=comp["comparison_score"],
+                comparison_score=comp_score,
                 confidence_score=s["confidence"],
-                review_status="human_reviewed" if s["order"] == 1 else comp["review_status"],
-                is_flagged=False if s["order"] == 1 else comp["is_flagged"],
-                flag_reason=None if s["order"] == 1 else comp["flag_reason"],
-                user_edited=True if s["order"] == 1 else False,
-                reviewer_id="Priya Sharma (Research Lead)" if s["order"] == 1 else None,
-                reviewed_at=datetime.datetime.utcnow() if s["order"] == 1 else None
+                review_status=rev_stat,
+                is_flagged=is_flg,
+                flag_reason=flg_rsn,
+                user_edited=True if rev_stat == "human_reviewed" else False,
+                reviewer_id="Priya Sharma (Research Lead)" if rev_stat == "human_reviewed" else None,
+                reviewed_at=datetime.datetime.utcnow() if rev_stat == "human_reviewed" else None
             )
             db.add(seg_db)
 
