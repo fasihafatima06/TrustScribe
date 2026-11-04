@@ -21,6 +21,9 @@ backend/uploads/*.ogg
 !backend/uploads/.gitkeep
 !backend/uploads/sample_*.wav
 
+# Generated Documents & Reports
+*.docx
+
 # IDE & OS
 .DS_Store
 .idea/
