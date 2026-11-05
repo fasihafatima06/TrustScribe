@@ -6,6 +6,13 @@
 
 ---
 
+## 🌐 Live Deployments
+
+- **Live Demo (Frontend)**: [**https://trustscribe-frontend.vercel.app/**](https://trustscribe-frontend.vercel.app/)
+- **Backend API (Render)**: [**https://trustscribe.onrender.com**](https://trustscribe.onrender.com) (API Docs: [`/docs`](https://trustscribe.onrender.com/docs))
+
+---
+
 ## 🎯 Key Capabilities & Highlights
 
 1. **Zero-Friction / Direct Processing**:
@@ -26,13 +33,6 @@
    - Sticky player with Play/Pause/Stop, 1.0x / 1.5x / 2.0x playback speed controls, and a precise timeline scrubber (`00:00 / 28:45`).
 7. **Research-Ready Verification Reports**:
    - Download audit-ready verification reports in 4 formats: **Word doc (.docx)**, **PDF (.pdf)**, **Text (.txt)**, and **JSON (.json)** with timestamps, dual-engine discrepancies, and human verification signatures.
-
----
-
-## 🌐 Live Deployments
-
-- **Frontend (Vercel)**: Configured with `vercel.json` rewrites and automatic backend resolution.
-- **Backend (Render)**: Hosted at [`https://trustscribe.onrender.com`](https://trustscribe.onrender.com) (configured with `render.yaml` and `Procfile`).
 
 ---
 
